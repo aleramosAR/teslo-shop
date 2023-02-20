@@ -8,7 +8,7 @@ type Data = { message: string }
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
 
   if(process.env.NODE_ENV === 'production') {
-    return res.status(401).json({ message: 'No tiene accesp a este API.' });
+    return res.status(401).json({ message: 'No tiene acceso a este API.' });
   }
 
   await db.connect();

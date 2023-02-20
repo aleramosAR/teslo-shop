@@ -1,45 +1,49 @@
-import {
-	Box,
-	Divider,
-	Drawer,
-	IconButton,
-	Input,
-	InputAdornment,
-	List,
-	ListItem,
-	ListItemIcon,
-	ListItemText,
-	ListSubheader,
-} from '@mui/material';
-import {
-	AccountCircleOutlined,
-	AdminPanelSettings,
-	CategoryOutlined,
-	ConfirmationNumberOutlined,
-	EscalatorWarningOutlined,
-	FemaleOutlined,
-	LoginOutlined,
-	MaleOutlined,
-	SearchOutlined,
-	VpnKeyOutlined,
-} from '@mui/icons-material';
+import { useContext, useState } from 'react';
+import { useRouter } from 'next/router';
+
+import { Box, Divider, Drawer, IconButton, Input, InputAdornment, List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader } from '@mui/material';
+import { AccountCircleOutlined, AdminPanelSettings, CategoryOutlined, ConfirmationNumberOutlined, EscalatorWarningOutlined, FemaleOutlined, LoginOutlined, MaleOutlined, SearchOutlined, VpnKeyOutlined } from '@mui/icons-material';
+import { UiContext } from '@/context';
 
 export const SideMenu = () => {
+
+	const router = useRouter();
+	const { isMenuOpen, toggleSideMenu } = useContext(UiContext);
+
+	const [searchTerm, setSearchTerm] = useState('');
+	
+	const onSearchTerm = () => {
+		if(searchTerm.trim().length === 0) return;
+		navigateTo(`/search/${searchTerm}`);
+	}
+
+	const navigateTo = (url:string) => {
+		toggleSideMenu();
+		router.push(url);
+	}
+
 	return (
 		<Drawer
-			open={false}
+			open={isMenuOpen}
 			anchor='right'
 			sx={{ backdropFilter: 'blur(4px)', transition: 'all 0.5s ease-out' }}
+			onClose={toggleSideMenu}
 		>
 			<Box sx={{ width: 250, paddingTop: 5 }}>
 				<List>
 					<ListItem>
 						<Input
+							autoFocus
+							value={searchTerm}
+							onChange={(e) => setSearchTerm(e.target.value)}
+							onKeyPress={(e) => e.key === 'Enter' ? onSearchTerm() : null}
 							type='text'
 							placeholder='Buscar...'
 							endAdornment={
 								<InputAdornment position='end'>
-									<IconButton aria-label='toggle password visibility'>
+									<IconButton
+										onClick={onSearchTerm}
+									>
 										<SearchOutlined />
 									</IconButton>
 								</InputAdornment>
@@ -47,78 +51,78 @@ export const SideMenu = () => {
 						/>
 					</ListItem>
 
-					<ListItem button>
+					<ListItemButton>
 						<ListItemIcon>
 							<AccountCircleOutlined />
 						</ListItemIcon>
 						<ListItemText primary={'Perfil'} />
-					</ListItem>
+					</ListItemButton>
 
-					<ListItem button>
+					<ListItemButton>
 						<ListItemIcon>
 							<ConfirmationNumberOutlined />
 						</ListItemIcon>
 						<ListItemText primary={'Mis Ordenes'} />
-					</ListItem>
-
-					<ListItem button sx={{ display: { xs: '', sm: 'none' } }}>
+					</ListItemButton>
+					
+					<ListItemButton sx={{ display: { xs: '', sm: 'none' } }} onClick={() => navigateTo('/category/men')}>
 						<ListItemIcon>
 							<MaleOutlined />
 						</ListItemIcon>
 						<ListItemText primary={'Hombres'} />
-					</ListItem>
+					</ListItemButton>
 
-					<ListItem button sx={{ display: { xs: '', sm: 'none' } }}>
+					<ListItemButton sx={{ display: { xs: '', sm: 'none' } }} onClick={() => navigateTo('/category/women')}>
 						<ListItemIcon>
 							<FemaleOutlined />
 						</ListItemIcon>
 						<ListItemText primary={'Mujeres'} />
-					</ListItem>
+					</ListItemButton>
 
-					<ListItem button sx={{ display: { xs: '', sm: 'none' } }}>
+					<ListItemButton sx={{ display: { xs: '', sm: 'none' } }} onClick={() => navigateTo('/category/kid')}>
 						<ListItemIcon>
 							<EscalatorWarningOutlined />
 						</ListItemIcon>
 						<ListItemText primary={'Niños'} />
-					</ListItem>
+					</ListItemButton>
 
-					<ListItem button>
+					<ListItemButton>
 						<ListItemIcon>
 							<VpnKeyOutlined />
 						</ListItemIcon>
 						<ListItemText primary={'Ingresar'} />
-					</ListItem>
+					</ListItemButton>
 
-					<ListItem button>
+					<ListItemButton>
 						<ListItemIcon>
 							<LoginOutlined />
 						</ListItemIcon>
 						<ListItemText primary={'Salir'} />
-					</ListItem>
+					</ListItemButton>
 
 					{/* Admin */}
 					<Divider />
 					<ListSubheader>Admin Panel</ListSubheader>
 
-					<ListItem button>
+					<ListItemButton>
 						<ListItemIcon>
 							<CategoryOutlined />
 						</ListItemIcon>
 						<ListItemText primary={'Productos'} />
-					</ListItem>
-					<ListItem button>
+					</ListItemButton>
+					<ListItemButton>
 						<ListItemIcon>
 							<ConfirmationNumberOutlined />
 						</ListItemIcon>
 						<ListItemText primary={'Ordenes'} />
-					</ListItem>
+					</ListItemButton>
 
-					<ListItem button>
+					<ListItemButton>
 						<ListItemIcon>
 							<AdminPanelSettings />
 						</ListItemIcon>
 						<ListItemText primary={'Usuarios'} />
-					</ListItem>
+					</ListItemButton>
 				</List>
 			</Box>
 		</Drawer>

@@ -5,14 +5,14 @@ import { ProductList } from "@/components/products";
 import { useProducts } from "@/hooks";
 import { FullScreenLoading } from "@/components/ui";
 
-const HomePage:NextPage = () => {
+const MensPage:NextPage = () => {
 
-  const { products, isLoading } = useProducts('/products');
+  const { products, isLoading } = useProducts('/products?gender=men');
 
   return (
-    <ShopLayout title={"Teslo-shop - Home"} pageDescription={"Encuentra los mejores productos de Teslo aquí."}>
-      <Typography variant="h1" component="h1">Tienda</Typography>
-      <Typography variant="h2" sx={{ marginBottom: 1 }}>Todos los productos</Typography>
+    <ShopLayout title={"Teslo-shop - Men"} pageDescription={"Encuentra los mejores productos de Teslo para hombres."}>
+      <Typography variant="h1" component="h1">Hombres</Typography>
+      <Typography variant="h2" sx={{ marginBottom: 1 }}>Productos para hombres</Typography>
 
       {
         isLoading
@@ -24,4 +24,4 @@ const HomePage:NextPage = () => {
   )
 }
 
-export default HomePage
+export default MensPage
