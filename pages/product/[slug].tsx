@@ -1,10 +1,15 @@
+import { useContext, useState } from 'react';
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import { Box, Button, Grid, Typography } from "@mui/material";
-import { ShopLayout } from "@/components/layouts"
+import { useRouter } from 'next/router';
+
+import { CartContext } from '@/context';
+import { ICartProduct, IProduct, ISize } from "@/interfaces";
+import { dbProducts } from "@/database";
+import { Box, Button, Grid, Typography, Chip } from "@mui/material";
+
 import { ProductSlideshow, SizeSelector } from "@/components/products";
+import { ShopLayout } from "@/components/layouts"
 import { ItemCounter } from "@/components/ui";
-import { IProduct } from "@/interfaces";
-import { db, dbProducts } from "@/database";
 
 // const product = initialData.products[0];
 
@@ -14,8 +19,44 @@ interface Props {
 
 const ProductPage:NextPage<Props> = ({ product }) => {
 
+  const maxItems:number = 5;
+  const { addProductToCart } = useContext(CartContext);
+  const router = useRouter();
+
   // const router = useRouter();
   // const { products:product, isLoading } = useProducts(`/products/${router.query.slug}`);
+
+  const [tempCartProduct, setTempCartProduct] = useState<ICartProduct>({
+    _id: product._id,
+    image: product.images[0],
+    price: product.price,
+    size: undefined,
+    slug: product.slug,
+    title: product.title,
+    gender: product.gender,
+    quantity: 1,
+  });
+
+  const selectedSize = (size:ISize) => {
+    setTempCartProduct(currentProduct => ({
+      ...currentProduct,
+      size
+    }));
+  }
+
+  const updateQuantity = (quantity:number) => {
+    setTempCartProduct(currentProduct => ({
+      ...currentProduct,
+      quantity
+    }));
+  }
+
+  const onAddProduct = () => {
+    if (!tempCartProduct.size) return;
+
+    addProductToCart(tempCartProduct);
+    router.push('/cart');
+  }
 
   return (
     <ShopLayout title={product.title} pageDescription={product.description}>
@@ -30,22 +71,46 @@ const ProductPage:NextPage<Props> = ({ product }) => {
 
             {/* titulos */}
             <Typography variant='h1' component='h1'>{product.title}</Typography>
-            <Typography variant='subtitle1' component='h2'>{`$${product.price}`}</Typography>
+            <Typography variant='subtitle1' component='h2' sx={{ mb: 2 }}>{`$${product.price}`}</Typography>
 
-            {/* Cantidad */}
-            <Box sx={{ my: 2 }}>
-              <Typography variant='subtitle2'>Cantidad</Typography>
-              <ItemCounter />
-              <SizeSelector sizes={product.sizes} />
-            </Box>
+            {
+              (product.inStock > 0)
+                && <Box sx={{ my: 2 }}>
+                  <Typography variant='subtitle2'>Cantidad</Typography>
+                  <ItemCounter
+                    currentValue={tempCartProduct.quantity}
+                    maxValue={product.inStock > maxItems ? maxItems : product.inStock}
+                    updateQuantity={updateQuantity}
+                  />
 
-            {/* Agregar al carrito */}
-            <Button color="secondary" className="circular-brn">
-              Agregar al carrito
-            </Button>
+                  <SizeSelector
+                    sizes={product.sizes}
+                    selectedSize={tempCartProduct.size}
+                    // Como esta tipado que lo que envio es un Isize no hace falta poner el parametro
+                    onSelectedSize={selectedSize}
+                  />
+                </Box>
+            }
 
-            {/* <Chip label="No hay disponibles" color="error" variant="outlined" /> */}
-
+            {
+              (product.inStock > 0)
+                ? (
+                  <Button
+                    color="secondary"
+                    className="circular-brn"
+                    onClick={onAddProduct}
+                  >
+                    {
+                      tempCartProduct.size
+                        ? 'Agregar al carrito'
+                        : 'Seleccione una talla'
+                    }
+                  </Button>
+                ):(
+                  <Chip label="No hay disponibles" color="error" variant="outlined" />
+                )
+            }
+            
              {/* Descripcion */}
              <Box sx={{ mt: 3 }}>
               <Typography variant="subtitle1">Descripción</Typography>
