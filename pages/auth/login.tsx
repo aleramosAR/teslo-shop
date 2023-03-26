@@ -17,6 +17,7 @@ type FormData = {
 const LoginPage = () => {
 
   const router = useRouter();
+  const origin = router.query.p?.toString();
   const { loginUser } = useContext(AuthContext);
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
   const [showError, setShowError] = useState(false);
@@ -33,8 +34,8 @@ const LoginPage = () => {
       return;
     }
 
-    // TODO: Navegar a la pantalla donde estaba el usuario.
-    router.replace('/');
+    const destination = origin || '/';
+    router.replace(destination);
 
   }
 
@@ -99,7 +100,7 @@ const LoginPage = () => {
               </Button>
             </Grid>
             <Grid item xs={12} display="flex" justifyContent="end">
-              <NextLink href='/auth/register' passHref legacyBehavior>
+              <NextLink href={origin ? `/auth/register?p=${origin}` : '/auth/register'} passHref legacyBehavior>
                 <Link underline="always">
                   No tienes cuenta?
                 </Link>

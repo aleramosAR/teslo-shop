@@ -6,7 +6,6 @@ import { ErrorOutlined } from '@mui/icons-material';
 
 import { AuthLayout } from '@/components/layouts'
 import { validations } from '@/utils';
-import { tesloApi } from '@/api';
 import { useRouter } from 'next/router';
 import { AuthContext } from '@/context';
 
@@ -19,6 +18,7 @@ type FormData = {
 const RegisterPage = () => {
 
   const router = useRouter();
+  const origin = router.query.p?.toString();
   const { registerUser } = useContext(AuthContext);
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
   const [showError, setShowError] = useState(false);
@@ -36,8 +36,8 @@ const RegisterPage = () => {
       return;
     }
 
-    // TODO: Navegar a la pantalla donde estaba el usuario.
-    router.replace('/');
+    const destination = origin || '/';
+    router.replace(destination);
     
   }
 
@@ -109,7 +109,7 @@ const RegisterPage = () => {
               </Button>
             </Grid>
             <Grid item xs={12} display="flex" justifyContent="end">
-              <NextLink href='/auth/login' passHref legacyBehavior>
+              <NextLink href={origin ? `/auth/login?p=${origin}` : '/auth/login'} passHref legacyBehavior>
                 <Link underline="always">
                   Ya tienes cuenta?
                 </Link>
