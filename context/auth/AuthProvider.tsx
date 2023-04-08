@@ -1,5 +1,6 @@
 import { FC, ReactNode, useReducer, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { useSession, signOut } from 'next-auth/react';
 
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -23,27 +24,35 @@ interface ProviderProps { children: ReactNode }
 export const AuthProvider:FC<ProviderProps> = ({children}) => {
 
   const [state, dispatch] = useReducer(authReducer, AUTH_INITIAL_STATE);
+  const { data, status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
-    checkToken();
-  }, []);
-
-  const checkToken = async () => {
-
-    if(!Cookies.get('token')) {
-      return;
+    if (status === 'authenticated') {
+      // console.log({user: data?.user});
+      dispatch({ type: '[Auth] - Login', payload: data?.user as IUser });
     }
-    
-    try {
-      const { data } = await tesloApi.get('/user/validate-token');
-      const { token, user } = data;
-      Cookies.set('token', token);
-      dispatch({ type: '[Auth] - Login', payload: user });
-    } catch (error) {
-      Cookies.remove('token');
-    }
-  }
+  }, [status, data])
+  
+
+  // Ya no usamos la autenticacion personalizada.
+  // useEffect(() => {
+  //   checkToken();
+  // }, []);
+
+  // const checkToken = async () => {
+  //   if(!Cookies.get('token')) {
+  //     return;
+  //   }
+  //   try {
+  //     const { data } = await tesloApi.get('/user/validate-token');
+  //     const { token, user } = data;
+  //     Cookies.set('token', token);
+  //     dispatch({ type: '[Auth] - Login', payload: user });
+  //   } catch (error) {
+  //     Cookies.remove('token');
+  //   }
+  // }
   
 
   const loginUser = async(email: string, password: string):Promise<boolean> => {
@@ -82,9 +91,20 @@ export const AuthProvider:FC<ProviderProps> = ({children}) => {
   }
 
   const logout = () => {
-    Cookies.remove('token');
     Cookies.remove('cart');
-    router.reload();
+    Cookies.remove('firstName');
+    Cookies.remove('lastName');
+    Cookies.remove('address');
+    Cookies.remove('address2');
+    Cookies.remove('zip');
+    Cookies.remove('city');
+    Cookies.remove('country');
+    Cookies.remove('phone');
+
+    signOut();
+    
+    // Cookies.remove('token');
+    // router.reload();
   }
 
   return (

@@ -1,9 +1,9 @@
 import { NextPage } from "next"
-import { ShopLayout } from "@/components/layouts"
-import { Typography } from "@mui/material"
-import { ProductList } from "@/components/products";
 import { useProducts } from "@/hooks";
+import { ShopLayout } from "@/components/layouts"
+import { ProductList } from "@/components/products";
 import { FullScreenLoading } from "@/components/ui";
+import { Typography } from "@mui/material"
 
 const HomePage:NextPage = () => {
 

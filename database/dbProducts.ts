@@ -17,8 +17,6 @@ export const getProductBySlug = async( slug:string ):Promise<IProduct | null> =>
 }
 
 
-
-
 interface ProductSlug {
   slug:string;
 }

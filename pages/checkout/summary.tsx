@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { ShopLayout } from '@/components/layouts';
 import NextLink from 'next/link';
 import { Box, Button, Card, CardContent, Divider, Grid, Link, Typography } from '@mui/material';
@@ -6,10 +6,19 @@ import CartList from '@/components/cart/CartList';
 import { OrderSummary } from '@/components/cart';
 import { CartContext } from '@/context';
 import { countries } from '@/utils';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/router';
 
 const SummaryPage = () => {
-
+  const router = useRouter();
   const {shippingAddress, numberOfItems} = useContext(CartContext);
+
+  useEffect(() => {
+    if(!Cookies.get('firstName')) {
+      router.push('/checkout/address');
+    }
+  }, [router])
+
 
   // Al llegar a esta pagina se da por hecho que ya tenemos una shipping address
   // Si no la hay mostrar pagina de error o redireccionar
@@ -42,7 +51,8 @@ const SummaryPage = () => {
               <Typography>{firstName} {lastName}</Typography>
               <Typography>{address}{address2 ? `, ${address2}` : ''}</Typography>
               <Typography>{city}, {zip}</Typography>
-              <Typography>{countries.find(c => c.code === country)?.name}</Typography>
+              {/* <Typography>{countries.find(c => c.code === country)?.name}</Typography> */}
+              <Typography>{country}</Typography>
               <Typography>{phone}</Typography>
               
               <Divider sx={{ mt: 1, mb: 1}} />

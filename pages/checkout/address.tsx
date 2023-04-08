@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
@@ -37,10 +37,27 @@ const AddressPage = () => {
   const router = useRouter();
   const {updateAddress} = useContext(CartContext);
 
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>({
     // React Hook Form permite agregar un objeto con valores por defecto
-    defaultValues: getAddressFromCookies()
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      address: '',
+      address2: '',
+      zip: '',
+      city: '',
+      country: '',
+      phone: ''
+    }
   });
+
+  useEffect(() => {
+
+    reset(getAddressFromCookies());
+
+  }, [reset])
+  
+
   // const [showError, setShowError] = useState(false);
 
   const onSubmitAddress = async(data:FormData) => {
@@ -161,9 +178,10 @@ const AddressPage = () => {
           <Grid item xs={12} sm={6}>
              <FormControl fullWidth>
               <TextField
-                select
+                // select
                 variant='filled'
                 label='País'
+                fullWidth
                 defaultValue={ Cookies.get('country') || countries[0].code }
                 {
                   ...register('country', {
@@ -173,8 +191,8 @@ const AddressPage = () => {
                 }
                 error={!!errors.country}
                 helperText={errors.country?.message}
-              >
-                {
+              />
+                {/* {
                   countries.map(country => (
                     <MenuItem
                       key={country.code}
@@ -182,7 +200,7 @@ const AddressPage = () => {
                     >{country.name}</MenuItem>
                   ))
                 }
-              </TextField>
+              </TextField> */}
              </FormControl>
           </Grid>
           <Grid item xs={12} sm={6}>
