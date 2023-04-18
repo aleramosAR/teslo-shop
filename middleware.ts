@@ -1,3 +1,4 @@
+import { log } from "console";
 import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
@@ -7,9 +8,10 @@ import type { NextRequest } from "next/server";
 export async function middleware(req:NextRequest) {
   const session = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
   // Informacion util sobre el usuario
-  // console.log({session});
+  console.log({session});
 
   if(!session) {
+    console.log('asdsad')
     const requestedpage = req.nextUrl.pathname;
     const url = req.nextUrl.clone();
     url.pathname = `/auth/login`;

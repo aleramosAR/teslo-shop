@@ -1,11 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { GetServerSideProps } from 'next'
+import { useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useForm } from 'react-hook-form';
-import { ShopLayout } from '@/components/layouts'
-import { FormControl, Grid, MenuItem, TextField, Typography, Box, Button, Chip } from '@mui/material'
-import { countries, jwt } from '@/utils'
+import { Box, Button, FormControl, Grid, TextField, Typography } from '@mui/material';
 import Cookies from 'js-cookie';
+import { useForm } from 'react-hook-form';
+
+import { ShopLayout } from '@/components/layouts'
+import { GetServerSideProps } from 'next'
+import { countries, jwt } from '@/utils'
 import { CartContext } from '@/context';
 
 type FormData = {
@@ -231,32 +232,32 @@ const AddressPage = () => {
 
 // You should use getServerSideProps when:
 // - Only if you need to pre-render a page whose data must be fetched at request time
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+// export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
-  const { token = '' } = req.cookies;
-  let isValidToken = false;
+//   const { token = '' } = req.cookies;
+//   let isValidToken = false;
 
-  try {
-    await jwt.isValidToken(token);
-    isValidToken = true;
-  } catch (error) {
-    isValidToken = false;
-  }
+//   try {
+//     await jwt.isValidToken(token);
+//     isValidToken = true;
+//   } catch (error) {
+//     isValidToken = false;
+//   }
 
-  if(!isValidToken) {
-    return {
-      redirect: {
-        destination: '/auth/login?p=/checkout/address',
-        permanent: false
-      }
-    }
-  }
+//   if(!isValidToken) {
+//     return {
+//       redirect: {
+//         destination: '/auth/login?p=/checkout/address',
+//         permanent: false
+//       }
+//     }
+//   }
 
-  return {
-    props: {
+//   return {
+//     props: {
       
-    }
-  }
-}
+//     }
+//   }
+// }
 
 export default AddressPage

@@ -3,13 +3,14 @@ import NextLink from 'next/link'
 import { Box, Button, CardActionArea, CardMedia, Grid, Link, Typography } from "@mui/material"
 import { ItemCounter } from '../ui'
 import { CartContext } from '@/context'
-import { ICartProduct } from '@/interfaces'
+import { ICartProduct, IOrderItem } from '@/interfaces'
 
 interface Props {
   editable?: boolean;
+  products?: IOrderItem[];
 }
 
-const CartList:FC<Props> = ({ editable = false }) => {
+export const CartList:FC<Props> = ({ editable = false, products }) => {
 
   // Agregue el chequeo para saber si esta montado el componente, para evitar problemas de hidratación
   const [hasMounted, setHasMounted] = useState(false);
@@ -27,11 +28,13 @@ const CartList:FC<Props> = ({ editable = false }) => {
   const onProductRemove = (product:ICartProduct, ) => {
     removeCartProduct(product);
   }
+
+  const productsToShow = products ? products : cart;
   
   return (
     <>
     {
-      hasMounted && cart.map(product => (
+      hasMounted && productsToShow.map(product => (
         <Grid container spacing={2} sx={{ mb: 1 }} key={product.slug + product.size}>
           <Grid item xs={3}>
             <NextLink href={`/product/${product.slug}`} passHref legacyBehavior>
@@ -55,7 +58,7 @@ const CartList:FC<Props> = ({ editable = false }) => {
                   ? <ItemCounter
                       currentValue={product.quantity}
                       maxValue={10}
-                      updateQuantity={(value) => onNewCartQuantity(product, value)}
+                      updateQuantity={(value) => onNewCartQuantity(product as ICartProduct, value)}
                     />
                   : <Typography variant='h6'>{product.quantity} {product.quantity > 1 ? 'productos':'producto' }</Typography>
               }
@@ -68,7 +71,7 @@ const CartList:FC<Props> = ({ editable = false }) => {
                 <Button
                   variant='text'
                   color='secondary'
-                  onClick={() => onProductRemove(product)}
+                  onClick={() => onProductRemove(product as ICartProduct)}
                 >
                   Remover
                 </Button>
@@ -81,5 +84,3 @@ const CartList:FC<Props> = ({ editable = false }) => {
     </>
   )
 }
-
-export default CartList

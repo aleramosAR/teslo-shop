@@ -3,7 +3,7 @@ import { Box, Button, Card, CardContent, Divider, Grid, Typography } from '@mui/
 
 import { CartContext } from '@/context';
 import { ShopLayout } from '@/components/layouts';
-import CartList from '@/components/cart/CartList';
+import {CartList} from '@/components/cart/CartList';
 import { OrderSummary } from '@/components/cart';
 import { useRouter } from 'next/router';
 
