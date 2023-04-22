@@ -12,7 +12,7 @@ export const authOptions:NextAuthOptions = {
         email: { label: 'Correo', type: 'email', placeholder: 'correo@google.com' },
         password: { label: 'Contraseña', type: 'password', placeholder: 'Contraseña' }
       },
-      async authorize(credentials) {
+      async authorize(credentials):Promise<any> {
         console.log(credentials);
         // return { name: 'Ale', correo: 'ale@ale.com', role: 'admin' };
         return await dbUsers.checkUserEmailPassword(credentials!.email, credentials!.password);
