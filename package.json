@@ -43,5 +43,8 @@
     "@types/formidable": "^2.0.5",
     "@types/js-cookie": "^3.0.3",
     "@types/jsonwebtoken": "^9.0.1"
+  },
+  "engines": {
+    "node": "16.13.0"
   }
 }
