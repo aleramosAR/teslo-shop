@@ -6,7 +6,7 @@ import { Box, Button, capitalize, Card, CardActions, CardMedia, Checkbox, Chip, 
 import { DriveFileRenameOutline, SaveOutlined, UploadOutlined } from '@mui/icons-material';
 
 import { dbProducts } from '@/database';
-import { IProduct, ISize, IType } from '@/interfaces';
+import { IGender, IProduct, ISize, IType } from '@/interfaces';
 import { AdminLayout } from '@/components/layouts'
 import { tesloApi } from '@/api';
 import { Product } from '@/models';
@@ -237,7 +237,7 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
 								row
 								value={getValues('gender')}
                 // shouldValidate ordena validar el campo y eso dispara un re-render
-								onChange={({target}) => setValue('gender', target.value, { shouldValidate: true } ) }
+								onChange={({target}) => setValue('gender', target.value as IGender, { shouldValidate: true } ) }
 							>
 								{validGender.map((option) => (
 									<FormControlLabel
